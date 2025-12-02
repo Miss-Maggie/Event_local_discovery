@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Maroon/Black/Pink/Cream/Gold Theme for Event Discovery */
+    --background: 0 100% 98%; /* Cream background */
+    --foreground: 0 0% 5%; /* Near black text */
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 0 0% 5%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+
+    --primary: 0 100% 25%; /* Maroon */
+    --primary-foreground: 0 100% 98%; /* Cream text on maroon */
+
+    --secondary: 346 100% 72%; /* Soft pink accent */
+    --secondary-foreground: 0 0% 5%;
+
+    --muted: 0 20% 95%; /* Light cream */
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 45 100% 51%; /* Gold accent */
+    --accent-foreground: 0 0% 5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 100% 98%;
+
+    --border: 0 20% 90%;
+    --input: 0 20% 95%;
+    --ring: 0 100% 25%; /* Maroon ring */
+
+    --radius: 0.75rem;
+
+    /* Custom gradient tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(0, 100%, 25%), hsl(346, 100%, 72%));
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%), hsl(0, 20%, 98%));
+    
+    /* Shadows with maroon tint */
+    --shadow-elevated: 0 10px 40px -10px hsl(0, 100%, 25%, 0.15);
+    --shadow-card: 0 4px 12px -2px hsl(0, 100%, 25%, 0.1);
+    
+    /* Animation */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 0 0% 8%; /* Dark background */
+    --foreground: 0 100% 98%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 100% 98%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 100% 98%;
+
+    --primary: 0 100% 35%; /* Lighter maroon for dark mode */
+    --primary-foreground: 0 100% 98%;
+
+    --secondary: 346 80% 65%; /* Adjusted pink for dark mode */
+    --secondary-foreground: 0 100% 98%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 45 100% 55%;
+    --accent-foreground: 0 0% 5%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 100% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 0 100% 35%;
+    
+    --gradient-hero: linear-gradient(135deg, hsl(0, 100%, 35%), hsl(346, 80%, 65%));
+    --shadow-elevated: 0 10px 40px -10px hsl(0, 0%, 0%, 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
