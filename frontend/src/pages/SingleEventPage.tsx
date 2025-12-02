@@ -20,7 +20,7 @@ const SingleEventPage = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       if (!id) return;
-      
+
       try {
         const eventData = await eventApi.getEvent(parseInt(id));
         setEvent(eventData);
@@ -85,11 +85,20 @@ const SingleEventPage = () => {
       <main className="flex-1">
         {/* Hero Image */}
         <div className="relative h-[400px] overflow-hidden">
-          <img
-            src={event.image}
-            alt={event.title}
-            className="w-full h-full object-cover"
-          />
+          {event.image ? (
+            <img
+              src={event.image}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/30 via-secondary/30 to-accent/30 flex items-center justify-center">
+              <div className="text-center p-8">
+                <Calendar className="h-24 w-24 mx-auto mb-4 text-primary/60" />
+                <h2 className="text-2xl font-bold text-foreground/80">{event.title}</h2>
+              </div>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
         </div>
 
@@ -112,7 +121,7 @@ const SingleEventPage = () => {
                     </Button>
                   </div>
                 </div>
-                
+
                 <h1 className="text-4xl font-bold text-foreground mb-4">
                   {event.title}
                 </h1>

@@ -16,11 +16,20 @@ const EventCard = ({ event }: EventCardProps) => {
       <Card className="overflow-hidden hover:shadow-elevated transition-all duration-300 group h-full">
         {/* Event Image */}
         <div className="relative aspect-video overflow-hidden">
-          <img
-            src={event.image}
-            alt={event.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          {event.image ? (
+            <img
+              src={event.image}
+              alt={event.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center">
+              <div className="text-center p-6">
+                <Calendar className="h-12 w-12 mx-auto mb-2 text-primary/60" />
+                <p className="text-sm font-medium text-muted-foreground line-clamp-2">{event.title}</p>
+              </div>
+            </div>
+          )}
           <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
             {event.category.icon} {event.category.name}
           </Badge>
@@ -31,7 +40,7 @@ const EventCard = ({ event }: EventCardProps) => {
           <h3 className="font-bold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {event.title}
           </h3>
-          
+
           <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
             {event.description}
           </p>
@@ -41,7 +50,7 @@ const EventCard = ({ event }: EventCardProps) => {
               <Calendar className="h-4 w-4 text-secondary" />
               <span>{format(new Date(event.date), "MMM dd, yyyy • h:mm a")}</span>
             </div>
-            
+
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 text-secondary" />
               <span className="line-clamp-1">{event.locationName}</span>
@@ -55,7 +64,7 @@ const EventCard = ({ event }: EventCardProps) => {
             <Eye className="h-4 w-4" />
             <span>{event.views.toLocaleString()} views</span>
           </div>
-          
+
           <span className="text-sm font-medium text-primary">
             View Details →
           </span>
