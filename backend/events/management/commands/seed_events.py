@@ -44,7 +44,7 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(self.style.SUCCESS(f'Created category: {category.name}'))
 
-        # Sample Nairobi events
+        # Sample Nairobi events with images
         events_data = [
             {
                 'title': 'Nairobi Jazz Festival 2025',
@@ -56,6 +56,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=7),
                 'price': 2500.00,
                 'quantity': 500,
+                'image': 'event_images/jazz_festival.png',
             },
             {
                 'title': 'Nairobi Tech Summit 2025',
@@ -67,6 +68,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=14),
                 'price': 5000.00,
                 'quantity': 1000,
+                'image': 'event_images/tech_summit.png',
             },
             {
                 'title': 'Karura Forest Nature Walk',
@@ -78,6 +80,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=3),
                 'price': 500.00,
                 'quantity': 50,
+                'image': 'event_images/forest_walk.png',
             },
             {
                 'title': 'Nairobi Food Festival',
@@ -89,6 +92,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=10),
                 'price': 1000.00,
                 'quantity': 800,
+                'image': 'event_images/food_festival.png',
             },
             {
                 'title': 'Art Exhibition: Contemporary Kenya',
@@ -100,6 +104,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=5),
                 'price': 800.00,
                 'quantity': 200,
+                'image': 'event_images/art_exhibition.png',
             },
             {
                 'title': 'Startup Networking Mixer',
@@ -111,6 +116,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=2),
                 'price': 1500.00,
                 'quantity': 100,
+                'image': 'event_images/networking_mixer.png',
             },
             {
                 'title': 'Nairobi Marathon 2025',
@@ -122,6 +128,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=21),
                 'price': 2000.00,
                 'quantity': 5000,
+                'image': 'event_images/marathon.png',
             },
             {
                 'title': 'Business Leadership Conference',
@@ -133,6 +140,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=12),
                 'price': 8000.00,
                 'quantity': 300,
+                'image': 'event_images/business.jpg',
             },
             {
                 'title': 'Nairobi Comedy Night',
@@ -144,7 +152,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=4),
                 'price': 1200.00,
                 'quantity': 400,
-            },
+                'image': 'event_images/comedy_night.jpg',             },
             {
                 'title': 'Weekend Farmers Market',
                 'description': 'Fresh organic produce, artisanal products, and local crafts. Support local farmers and enjoy live music while you shop for healthy, sustainable food.',
@@ -155,6 +163,7 @@ class Command(BaseCommand):
                 'date': timezone.now() + timedelta(days=1),
                 'price': 0.00,  # Free event
                 'quantity': 1000,
+                'image': 'event_images/farmers_night.jpg',  
             },
         ]
 

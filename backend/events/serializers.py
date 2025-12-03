@@ -13,6 +13,7 @@ class EventSerializer(serializers.ModelSerializer):
     category_id = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(), source='category', write_only=True
     )
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -21,3 +22,11 @@ class EventSerializer(serializers.ModelSerializer):
             'latitude', 'longitude', 'category', 'category_id',
             'date', 'created_by', 'image', 'views', 'created_at'
         ]
+    
+    def get_image(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None
