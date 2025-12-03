@@ -14,21 +14,58 @@ const HomePage = () => {
   const [nearbyEvents, setNearbyEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchEvents = async (lat: number, lon: number) => {
+    setLoading(true);
+    try {
+      const events = await eventApi.getNearbyEvents(lat, lon);
+      setNearbyEvents(events);
+    } catch (error) {
+      console.error("Error fetching nearby events:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchNearbyEvents = async () => {
-      try {
-        // Mock coordinates for New York City
-        const events = await eventApi.getNearbyEvents(40.7580, -73.9855);
-        setNearbyEvents(events);
-      } catch (error) {
-        console.error("Error fetching nearby events:", error);
-      } finally {
+    // Default to Nairobi coordinates
+    fetchEvents(-1.2921, 36.8219);
+  }, []);
+
+  const handleSearch = async (query: string) => {
+    setLoading(true);
+    try {
+      // Use Nominatim for geocoding (free, no key required)
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0];
+        await fetchEvents(parseFloat(lat), parseFloat(lon));
+      } else {
+        // Handle location not found
+        setNearbyEvents([]);
         setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      setLoading(false);
+    }
+  };
 
-    fetchNearbyEvents();
-  }, []);
+  const handleUseMyLocation = () => {
+    if ("geolocation" in navigator) {
+      setLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          fetchEvents(position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          setLoading(false);
+        }
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -38,7 +75,7 @@ const HomePage = () => {
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-hero py-20 md:py-32">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
-          
+
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-3xl">
               <h1 className="text-5xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in">
@@ -47,7 +84,7 @@ const HomePage = () => {
               <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8">
                 Discover local events, connect with your community, and make memories that last.
               </p>
-              
+
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90">
                   <Link to="/events">
@@ -92,20 +129,56 @@ const HomePage = () => {
         {/* Nearby Events */}
         <section className="py-12 bg-background">
           <div className="container mx-auto px-4">
-            <div className="flex items-center gap-3 mb-8">
-              <MapPin className="h-8 w-8 text-primary" />
-              <h2 className="text-3xl font-bold text-foreground">Events Near You</h2>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+              <div className="flex items-center gap-3">
+                <MapPin className="h-8 w-8 text-primary" />
+                <h2 className="text-3xl font-bold text-foreground">Events Near You</h2>
+              </div>
+
+              {/* Location Search */}
+              <div className="flex gap-2 w-full md:w-auto">
+                <div className="relative flex-1 md:w-64">
+                  <input
+                    type="text"
+                    placeholder="Enter city (e.g. Nairobi)"
+                    className="w-full px-4 py-2 rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const value = (e.target as HTMLInputElement).value;
+                        if (value) handleSearch(value);
+                      }
+                    }}
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const input = document.querySelector('input[placeholder="Enter city (e.g. Nairobi)"]') as HTMLInputElement;
+                    if (input?.value) handleSearch(input.value);
+                  }}
+                >
+                  Search
+                </Button>
+                <Button variant="secondary" onClick={handleUseMyLocation} title="Use my location">
+                  <MapPin className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             {loading ? (
               <div className="flex justify-center items-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
-            ) : (
+            ) : nearbyEvents.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {nearbyEvents.map((event) => (
                   <EventCard key={event.id} event={event} />
                 ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <p className="text-lg">No upcoming events found in this area.</p>
+                <p className="text-sm mt-2">Try searching for a different city or check back later!</p>
               </div>
             )}
           </div>

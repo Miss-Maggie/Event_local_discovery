@@ -31,7 +31,7 @@ const EventCard = ({ event }: EventCardProps) => {
             </div>
           )}
           <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
-            {event.category.icon} {event.category.name}
+            {event.category.icon && `${event.category.icon} `}{event.category.name}
           </Badge>
         </div>
 
@@ -53,7 +53,7 @@ const EventCard = ({ event }: EventCardProps) => {
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 text-secondary" />
-              <span className="line-clamp-1">{event.locationName}</span>
+              <span className="line-clamp-1">{event.location_name}</span>
             </div>
           </div>
         </CardContent>

@@ -8,14 +8,13 @@ import CategoryFilter from "@/components/CategoryFilter";
 import SearchBar from "@/components/SearchBar";
 import { eventApi } from "@/api/eventApi";
 import { Event, Category } from "@/types/event";
-import { mockCategories } from "@/data/mockData";
 
 const EventsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [events, setEvents] = useState<Event[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const selectedCategory = searchParams.get("category");
   const searchQuery = searchParams.get("search") || "";
 
@@ -29,7 +28,7 @@ const EventsPage = () => {
           }),
           eventApi.getCategories(),
         ]);
-        
+
         setEvents(eventsData);
         setCategories(categoriesData);
       } catch (error) {

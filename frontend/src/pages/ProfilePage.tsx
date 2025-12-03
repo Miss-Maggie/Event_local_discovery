@@ -6,20 +6,65 @@ import EventCard from "@/components/EventCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockUser, mockEvents } from "@/data/mockData";
-import { Event } from "@/types/event";
-import { User, MapPin, Calendar, Edit } from "lucide-react";
+import { authApi } from "@/api/authApi";
+import { eventApi } from "@/api/eventApi";
+import { Event, User } from "@/types/event";
+import { MapPin, Calendar, Edit } from "lucide-react";
 
 const ProfilePage = () => {
+  const [user, setUser] = useState<User | null>(null);
   const [myEvents, setMyEvents] = useState<Event[]>([]);
   const [attendingEvents, setAttendingEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data - filter events created by user
-    setMyEvents(mockEvents.filter(e => e.createdBy.id === mockUser.id));
-    // Mock attending events
-    setAttendingEvents(mockEvents.slice(0, 2));
+    const fetchData = async () => {
+      try {
+        // Get current user
+        const userData = await authApi.getCurrentUser();
+        setUser(userData);
+
+        // Get user's created events
+        const allEvents = await eventApi.getEvents();
+        const userEvents = allEvents.filter(e => e.created_by.id === userData.id);
+        setMyEvents(userEvents);
+
+        // Get events user has registered for
+        const registeredEvents = await eventApi.getRegisteredEvents();
+        setAttendingEvents(registeredEvents);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex justify-center items-center">
+          <p>Please log in to view your profile.</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,21 +76,27 @@ const ProfilePage = () => {
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Avatar */}
-              <img
-                src={mockUser.avatar}
-                alt={mockUser.username}
-                className="w-32 h-32 rounded-full border-4 border-primary-foreground shadow-lg"
-              />
+              <div className="w-32 h-32 rounded-full border-4 border-primary-foreground shadow-lg bg-muted flex items-center justify-center text-4xl font-bold text-muted-foreground overflow-hidden">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.username}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{user.first_name?.[0]}{user.last_name?.[0]}</span>
+                )}
+              </div>
 
               {/* User Info */}
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-3xl font-bold text-primary-foreground mb-2">
-                  {mockUser.firstName} {mockUser.lastName}
+                  {user.first_name} {user.last_name}
                 </h1>
                 <p className="text-xl text-primary-foreground/80 mb-4">
-                  @{mockUser.username}
+                  @{user.username}
                 </p>
-                <p className="text-primary-foreground/90">{mockUser.email}</p>
+                <p className="text-primary-foreground/90">{user.email}</p>
               </div>
 
               {/* Edit Button */}

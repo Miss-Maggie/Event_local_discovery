@@ -4,8 +4,8 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   avatar?: string;
 }
 
@@ -20,16 +20,16 @@ export interface Event {
   id: number;
   title: string;
   description: string;
-  locationName: string;
+  location_name: string;
   latitude: number;
   longitude: number;
   category: Category;
   date: string;
-  createdBy: User;
+  created_by: User;
   image: string;
   views: number;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  is_attending?: boolean;
 }
 
 export interface Ticket {

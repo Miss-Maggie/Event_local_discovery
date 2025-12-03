@@ -69,7 +69,7 @@ const Navbar = () => {
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/profile">
                   <UserIcon className="h-4 w-4 mr-2" />
-                  {user.firstName || user.username}
+                  {user.first_name || user.username}
                 </Link>
               </Button>
               <Button variant="ghost" size="sm" onClick={handleLogout}>

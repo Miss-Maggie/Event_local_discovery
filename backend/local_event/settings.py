@@ -169,3 +169,22 @@ DJOSER = {
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Email Configuration
+# For development: use console backend (emails print to terminal)
+# For production: use Gmail SMTP
+EMAIL_USE_GMAIL = config('EMAIL_USE_GMAIL', default=False, cast=bool)
+
+if EMAIL_USE_GMAIL:
+    # Gmail SMTP Configuration
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+    DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@whats-happening.com')
+else:
+    # Console backend for testing (prints to terminal)
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'noreply@whats-happening.com'

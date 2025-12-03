@@ -1,5 +1,5 @@
 // Event creation/edit form component
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,7 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockCategories } from "@/data/mockData";
+import { eventApi } from "@/api/eventApi";
+import { Category } from "@/types/event";
 import { Calendar, MapPin, Image as ImageIcon } from "lucide-react";
 
 // Form validation schema
@@ -47,6 +48,19 @@ interface EventFormProps {
 
 const EventForm = ({ onSubmit, initialData, isLoading }: EventFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await eventApi.getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventFormSchema),
@@ -123,9 +137,9 @@ const EventForm = ({ onSubmit, initialData, isLoading }: EventFormProps) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {mockCategories.map((category) => (
+                  {categories.map((category) => (
                     <SelectItem key={category.id} value={category.slug}>
-                      {category.icon} {category.name}
+                      {category.icon && `${category.icon} `}{category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

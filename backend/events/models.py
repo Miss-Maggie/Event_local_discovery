@@ -19,6 +19,7 @@ class Event(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='events')
     date = models.DateTimeField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='events')
+    attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='attending_events', blank=True)
     image = models.ImageField(upload_to='event_images/', null=True, blank=True)
     views = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,3 +36,20 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.event.title} - {self.price} ({self.quantity} available)"
+
+
+class EventRegistration(models.Model):
+    """Store detailed registration information for event attendees"""
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='registrations')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='event_registrations')
+    attendee_name = models.CharField(max_length=200)
+    attendee_email = models.EmailField()
+    attendee_phone = models.CharField(max_length=20, blank=True, null=True)
+    registered_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['event', 'user']
+        ordering = ['-registered_at']
+
+    def __str__(self):
+        return f"{self.attendee_name} - {self.event.title}"
