@@ -34,11 +34,11 @@ const Footer = () => {
                   Create Event
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/about" className="hover:text-primary transition-colors">
                   About Us
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -75,15 +75,15 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                hello@whatshappening.com
+                missmaggie215@gmail.com
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                (555) 123-4567
+                +254708679439
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                New York, NY
+                Nairobi, Kenya
               </li>
             </ul>
           </div>

@@ -5,10 +5,12 @@ A full-stack web application for discovering and managing local events in Nairob
 ## 🚀 Features
 
 - **Event Discovery**: Browse events by category, location, and date
+- **Location-based Search**: Find events near you with adjustable radius
+- **Trending Events**: See what's popular based on views
 - **User Authentication**: Email/password registration and login with JWT
-- **Event Management**: Create, edit, and manage events
+- **Event Management**: Create, edit, and manage events with image uploads
+- **Event Registration**: Register for events and receive email confirmations
 - **Categories**: Music, Sports, Technology, Food & Drink, Arts & Culture, Business, Networking
-- **Real-time Search**: Filter events by location and category
 - **Responsive Design**: Works on desktop and mobile devices
 
 ## 🛠️ Tech Stack
@@ -17,6 +19,8 @@ A full-stack web application for discovering and managing local events in Nairob
 - **React** with TypeScript
 - **Vite** for build tooling
 - **React Router** for navigation
+- **TanStack Query** for data fetching and state management
+- **React Hook Form** & **Zod** for form handling and validation
 - **Shadcn UI** for components
 - **Tailwind CSS** for styling
 - **Axios** for API calls
@@ -26,6 +30,7 @@ A full-stack web application for discovering and managing local events in Nairob
 - **Django REST Framework** for API
 - **Djoser** for authentication
 - **SimpleJWT** for JWT tokens
+- **Django Filter** for advanced filtering
 - **SQLite** database (development)
 - **CORS Headers** for cross-origin requests
 
@@ -40,8 +45,8 @@ A full-stack web application for discovering and managing local events in Nairob
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd what-s-happening-hub
+git clone https://github.com/Miss-Maggie/Event_local_discovery.git
+cd Event_local_discovery
 ```
 
 ### 2. Backend Setup
@@ -127,10 +132,15 @@ VITE_API_BASE_URL=http://localhost:8000/api
 
 ### Events
 - `GET /api/events/` - List all events
+- `GET /api/events/trending/` - Get top 3 trending events
+- `GET /api/events/nearby/?lat={lat}&lon={lon}&radius={km}` - Find events nearby
 - `POST /api/events/` - Create new event (authenticated)
 - `GET /api/events/{id}/` - Get event details
 - `PUT /api/events/{id}/` - Update event (owner only)
 - `DELETE /api/events/{id}/` - Delete event (owner only)
+- `POST /api/events/{id}/register/` - Register for an event
+- `POST /api/events/{id}/unregister/` - Unregister from an event
+- `GET /api/events/registered_events/` - List events user is registered for
 
 ### Categories
 - `GET /api/categories/` - List all categories
@@ -177,6 +187,8 @@ what-s-happening-hub/
 │   ├── src/
 │   │   ├── components/       # Reusable components
 │   │   ├── pages/            # Page components
+│   │   ├── hooks/            # Custom hooks
+│   │   ├── lib/              # Utilities (shadcn)
 │   │   ├── api/              # API client
 │   │   └── types/            # TypeScript types
 │   ├── public/               # Static assets
@@ -219,4 +231,4 @@ This project is licensed under the MIT License.
 
 - Shadcn UI for beautiful components
 - Django REST Framework for robust API
-- Nairobi tech community for inspiration
+- Luma and Nairobi Tech community for inspiration
