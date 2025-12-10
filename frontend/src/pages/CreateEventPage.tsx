@@ -1,5 +1,6 @@
 // Page for creating new events
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventForm from "@/components/EventForm";
@@ -8,6 +9,14 @@ import { toast } from "sonner";
 
 const CreateEventPage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token"); // Check for correct token key
+    if (!token) {
+      toast.error("Please login to create an event");
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (data: any) => {
     try {
@@ -18,9 +27,9 @@ const CreateEventPage = () => {
       formData.append("location_name", data.locationName);
       formData.append("latitude", data.latitude.toString());
       formData.append("longitude", data.longitude.toString());
-      formData.append("category", data.category);
+      formData.append("category_id", data.category);
       formData.append("date", data.date);
-      
+
       if (data.image?.[0]) {
         formData.append("image", data.image[0]);
       }

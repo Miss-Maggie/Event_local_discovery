@@ -10,11 +10,12 @@ class CategorySerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     created_by = UserSerializer(read_only=True)
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), source='category', write_only=True
+    category_id = serializers.SlugRelatedField(
+        queryset=Category.objects.all(), slug_field='slug', source='category', write_only=True
     )
     image = serializers.SerializerMethodField()
     is_attending = serializers.SerializerMethodField()
+    attendee_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -22,7 +23,7 @@ class EventSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'location_name', 
             'latitude', 'longitude', 'category', 'category_id',
             'date', 'created_by', 'image', 'views', 'created_at',
-            'is_attending'
+            'is_attending', 'attendee_count'
         ]
     
     def get_image(self, obj):
@@ -38,6 +39,10 @@ class EventSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.attendees.filter(id=request.user.id).exists()
         return False
+
+    def get_attendee_count(self, obj):
+        # Use annotated value if available to avoid N+1 queries
+        return getattr(obj, 'attendee_count_annotated', obj.attendees.count())
 
 
 class EventRegistrationSerializer(serializers.ModelSerializer):

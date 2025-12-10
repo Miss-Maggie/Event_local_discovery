@@ -30,6 +30,7 @@ export interface Event {
   views: number;
   created_at: string;
   is_attending?: boolean;
+  attendee_count?: number;
 }
 
 export interface Ticket {

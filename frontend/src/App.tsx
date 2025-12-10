@@ -9,6 +9,8 @@ import SingleEventPage from "./pages/SingleEventPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CreateEventPage from "./pages/CreateEventPage";
+import ManageEventPage from "./pages/ManageEventPage";
+import DashboardPage from "./pages/DashboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -29,6 +31,8 @@ const App = () => (
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/create-event" element={<CreateEventPage />} />
+            <Route path="/events/manage/:id" element={<ManageEventPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

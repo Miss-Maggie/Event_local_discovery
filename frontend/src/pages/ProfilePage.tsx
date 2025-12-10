@@ -148,7 +148,16 @@ const ProfilePage = () => {
                 {myEvents.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {myEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
+                      <div key={event.id} className="relative group">
+                        <EventCard event={event} />
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button asChild size="sm" variant="secondary" className="shadow-lg">
+                            <a href={`/events/manage/${event.id}`}>
+                              <Edit className="w-4 h-4 mr-1" /> Manage
+                            </a>
+                          </Button>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 ) : (

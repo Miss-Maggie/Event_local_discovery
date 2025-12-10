@@ -268,7 +268,7 @@ const EventForm = ({ onSubmit, initialData, isLoading }: EventFormProps) => {
           disabled={isLoading}
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
         >
-          {isLoading ? "Creating Event..." : "Create Event"}
+          {isLoading ? "Saving..." : initialData ? "Update Event" : "Create Event"}
         </Button>
       </form>
     </Form>

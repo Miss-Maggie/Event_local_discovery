@@ -2,7 +2,7 @@ from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Event, Category, EventRegistration
@@ -14,16 +14,18 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
 
 from django.utils import timezone
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all().order_by('-created_at')
+    queryset = Event.objects.all().select_related('category', 'created_by').prefetch_related('attendees').order_by('-created_at')
     serializer_class = EventSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category__slug', 'created_by']
     search_fields = ['title', 'description']
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().annotate(attendee_count_annotated=Count('attendees'))
         category_slug = self.request.query_params.get('category')
         if category_slug:
             queryset = queryset.filter(category__slug=category_slug)
@@ -31,11 +33,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Assign the current user as creator
-        # If user is not authenticated (e.g. during dev without auth), handle gracefully or require auth
-        if self.request.user.is_authenticated:
-            serializer.save(created_by=self.request.user)
-        else:
-            pass 
+        serializer.save(created_by=self.request.user)
 
     @action(detail=False, methods=['get'])
     def trending(self, request):
@@ -181,4 +179,24 @@ The Events Team
         events = Event.objects.filter(id__in=registered_event_ids).order_by('-date')
         
         serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def registrations(self, request, pk=None):
+        """Get all registrations for a specific event (only for event creator)"""
+        event = self.get_object()
+        
+        # Check permissions
+        if not request.user.is_authenticated:
+            return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        if event.created_by != request.user:
+            return Response(
+                {"error": "You do not have permission to view registrations for this event"}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
+        # Get registrations
+        registrations = EventRegistration.objects.filter(event=event).order_by('-registered_at')
+        serializer = EventRegistrationSerializer(registrations, many=True)
         return Response(serializer.data)

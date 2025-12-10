@@ -85,4 +85,18 @@ export const eventApi = {
     const response = await axiosClient.get("/events/registered_events/");
     return response.data;
   },
+
+  // Get registrations for a specific event (host only)
+  getEventRegistrations: async (id: number): Promise<{
+    id: number;
+    event: number;
+    user: number;
+    attendee_name: string;
+    attendee_email: string;
+    attendee_phone?: string;
+    registered_at: string;
+  }[]> => {
+    const response = await axiosClient.get(`/events/${id}/registrations/`);
+    return response.data;
+  },
 };

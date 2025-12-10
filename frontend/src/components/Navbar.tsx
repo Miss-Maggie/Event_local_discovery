@@ -56,9 +56,14 @@ const Navbar = () => {
             Events
           </Link>
           {isAuthenticated && (
-            <Link to="/create-event" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Create Event
-            </Link>
+            <>
+              <Link to="/create-event" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+                Create Event
+              </Link>
+              <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+                Dashboard
+              </Link>
+            </>
           )}
         </div>
 
