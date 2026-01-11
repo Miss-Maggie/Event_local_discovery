@@ -67,7 +67,7 @@ ROOT_URLCONF = 'local_event.urls'
 
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173,http://localhost:8080',
+    default='http://localhost:5173,http://localhost:8080,https://event-local-discovery-1.onrender.com',
     cast=Csv()
 )
 
