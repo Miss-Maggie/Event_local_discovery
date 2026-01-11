@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Configure base URL for Django backend (update when Django is running)
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://event-local-discovery.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
@@ -36,7 +36,7 @@ axiosClient.interceptors.response.use(
       const refreshToken = localStorage.getItem("refresh_token");
       if (refreshToken) {
         try {
-          const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+          const baseURL = import.meta.env.VITE_API_BASE_URL || "https://event-local-discovery.onrender.com";
           const response = await axios.post(`${baseURL}/auth/jwt/refresh/`, {
             refresh: refreshToken,
           });
